@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xmlConfiguration>
+    <AppConfiguration>
+        <BaseDir>G:\NVIDIA\DisplayDriver</BaseDir>
+        <OutputDir></OutputDir>
+        <baseDir>G:\NVIDIA\DisplayDriver</baseDir>
+        <outputDir></outputDir>
+    </AppConfiguration>
+    <ReaderConfiguration Recursive="false"/>
+    <ThumbConfiguration/>
+</xmlConfiguration>
