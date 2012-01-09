@@ -1,26 +1,32 @@
 package larsworks.datetool.image;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
-import larsworks.datetool.configuration.ThumbConfiguration;
+import javax.imageio.ImageIO;
+
 import larsworks.datetool.configuration.ThumbSize;
-import larsworks.datetool.configuration.ThumbSize.Size;
 
 public class DTThumbnail implements Thumb {
 
-	private final Map<Size, BufferedImage> images = new HashMap<Size, BufferedImage>();
+	private final java.awt.Image image; 
 	
-	public DTThumbnail(JpegImage image, ThumbConfiguration conf) {
-		for(ThumbSize thumbSize : conf.getSizes()) {
-			images.put(thumbSize.getSize(), null);
+	public DTThumbnail(JpegImage image, ThumbSize size) {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(image.getFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("could not create image from file");
 		}
+		this.image = img.getScaledInstance(size.getWidth(), size.getHeight(), 0);
 	}
 
 	@Override
-	public BufferedImage getImage(Size size) {
-		return images.get(size);
+	public Image getImage() {
+		return image;
 	}
+
 	
 }

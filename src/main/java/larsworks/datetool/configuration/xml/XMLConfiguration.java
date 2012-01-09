@@ -1,8 +1,5 @@
 package larsworks.datetool.configuration.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,8 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import larsworks.datetool.configuration.AppConfiguration;
 import larsworks.datetool.configuration.ReaderConfiguration;
-import larsworks.datetool.configuration.ThumbConfiguration;
-import larsworks.datetool.configuration.ThumbSize;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
@@ -26,7 +21,7 @@ public class XMLConfiguration {
 
 	@XmlElement(name = "ThumbConfiguration", required = true)
 	private XMLThumbConfiguration thumbConfiguration = new XMLThumbConfiguration();
-
+	
 	public static class XMLAppConfiguration implements AppConfiguration {
 
 		@XmlElement(name = "BaseDir", required = true)
@@ -34,7 +29,7 @@ public class XMLConfiguration {
 
 		@XmlElement(name = "OutputDir", required = true)
 		private String output = "";
-		
+
 		@XmlElement(name = "OutputSuffix", required = true)
 		private String suffix = "";
 
@@ -68,7 +63,6 @@ public class XMLConfiguration {
 			this.suffix = outputSuffix;
 		}
 
-
 	}
 
 	public static class XMLReaderConfiguration implements ReaderConfiguration {
@@ -81,45 +75,6 @@ public class XMLConfiguration {
 			return recursive;
 		}
 
-	}
-
-	public static class XMLThumbSize implements ThumbSize {
-
-		@XmlAttribute(name = "thumbheight")
-		private int height;
-
-		@XmlAttribute(name = "thumbwidth")
-		private int width;
-		
-		@XmlAttribute(name = "thumbsize")
-		private Size size;
-
-		@Override
-		public int getHeight() {
-			return height;
-		}
-
-		@Override
-		public int getWidth() {
-			return width;
-		}
-
-		@Override
-		public Size getSize() {
-			return size;
-		}
-
-	}
-	
-	public static class XMLThumbConfiguration implements ThumbConfiguration {
-
-		@XmlElement(name = "thumbsizes")
-		private List<XMLThumbSize> sizes = new ArrayList<XMLThumbSize>();
-
-		@Override
-		public List<XMLThumbSize> getSizes() {
-			return sizes;
-		}
 	}
 
 	public XMLAppConfiguration getAppConfiguration() {
