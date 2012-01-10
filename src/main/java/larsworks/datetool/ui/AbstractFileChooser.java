@@ -3,7 +3,7 @@ package larsworks.datetool.ui;
 
 import java.io.File;
 
-import larsworks.datetool.configuration.AppConfiguration;
+import larsworks.datetool.configuration.Configuration;
 import larsworks.datetool.util.SWTUtil;
 
 import org.apache.log4j.Logger;
@@ -24,7 +24,7 @@ public abstract class AbstractFileChooser implements DTWidget<Tree> {
 	protected static final Logger logger = Logger.getLogger(AbstractFileChooser.class);
 	
 	protected final Tree tree;
-	protected final AppConfiguration conf;
+	protected final Configuration conf;
 	
 	/**
 	 * adds all tree nodes to the given path  
@@ -75,7 +75,7 @@ public abstract class AbstractFileChooser implements DTWidget<Tree> {
 		
 	}
 	
-	public AbstractFileChooser(Composite parent, AppConfiguration conf) {
+	public AbstractFileChooser(Composite parent, Configuration conf) {
 		super();
 		tree = new Tree(parent, SWT.MULTI);
 		this.conf = conf;
@@ -111,7 +111,7 @@ public abstract class AbstractFileChooser implements DTWidget<Tree> {
 			public void handleEvent(Event event) {
 				TreeItem item = (TreeItem)event.item;
 				File dir = (File)item.getData();
-				conf.setBaseDir(dir.getAbsolutePath());
+				conf.getAppConfiguration().setBaseDir(dir.getAbsolutePath());
 				for(TreeItem ti : item.getItems()) {
 					if(ti.getItemCount() == 0) {
 						SWTUtil.addChildsAsync(ti);
@@ -133,7 +133,7 @@ public abstract class AbstractFileChooser implements DTWidget<Tree> {
 				if(tree.getSelectionCount() == 1) {
 					TreeItem item = tree.getSelection()[0];
 					File file = (File)item.getData();
-					new ImagePreviewShell(tree.getDisplay(), file);
+					new ImagePreviewShell(tree.getDisplay(), file, conf);
 				}
 			}
 		});

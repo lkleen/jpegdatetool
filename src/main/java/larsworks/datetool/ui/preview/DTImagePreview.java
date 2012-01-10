@@ -9,18 +9,34 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 
+import larsworks.datetool.configuration.Configuration;
+import larsworks.datetool.configuration.ThumbSize;
 import larsworks.datetool.ui.ImagePreview;
 
 public class DTImagePreview implements ImagePreview {
 
 	private static Logger logger = Logger.getLogger(DTImagePreview.class);
 	
+	private static enum Orientation {
+		horizontal,
+		vertical
+	}
+	
 	private final Image original;
+	private final float aspectRatio;
+	private final Rectangle bounds; 
+	private final Orientation orientation;
+	private final ThumbSize size;
 	private Image resized;
 	
-	public DTImagePreview(File file) {
+	
+	public DTImagePreview(File file, Configuration conf) {
+		size = conf.getThumbnailConfiguration().getPreviewSize();
 		original = loadImage(file);
-		resized = original;
+		aspectRatio = original.getBounds().width / original.getBounds().height;
+		orientation = (aspectRatio > 1) ? Orientation.horizontal : Orientation.vertical;
+		bounds = original.getBounds();
+		resized = resize(size.getWidth(), size.getHeight());
 	}
 	
 	private static Image loadImage(File file) {
@@ -47,38 +63,35 @@ public class DTImagePreview implements ImagePreview {
 
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return resized.getBounds().height;
 	}
 
 	@Override
 	public int getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setHeigth(int height) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setWidth(int width) {
-		// TODO Auto-generated method stub
-		
+		return resized.getBounds().width;
 	}
 
 	@Override
 	public Rectangle getBounds() {
-		// TODO Auto-generated method stub
-		return null;
+		return resized.getBounds();
 	}
 
 	@Override
-	public void setBounds(Rectangle bounds) {
-		ImageData id = original.getImageData().scaledTo(bounds.width, bounds.height);
-		resized = new Image(null, id);
-	} 
+	public void resize(Rectangle bounds) {
+		resized = resize(bounds.width, bounds.height);
+	}
+	
+	private Image resize(int width, int height) {
+		if(orientation == Orientation.vertical) {
+			float ratio = (float)width / bounds.width;
+			height = Math.round(bounds.height * ratio);
+		} else {
+			float ratio = (float)height / bounds.height;
+			width = Math.round(bounds.width * ratio);
+		}
+		ImageData id = original.getImageData().scaledTo(width, height);
+		
+		return new Image(null, id);
+	}
 	
 }

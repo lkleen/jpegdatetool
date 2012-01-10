@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -34,9 +33,7 @@ import larsworks.datetool.image.ImageSet;
 import larsworks.datetool.image.JpegImage;
 import larsworks.datetool.ui.dnd.DragSourceFileChooser;
 import larsworks.datetool.ui.fileselection.DTFileList;
-import larsworks.datetool.ui.fileselection.DTTargetSelector;
 import larsworks.datetool.ui.fileselection.FileListData;
-import larsworks.datetool.ui.fileselection.TargetSelector;
 
 public class MainWindow {
 
@@ -124,7 +121,7 @@ public class MainWindow {
 		settings.setLayoutData(fill);
 
 		final CalendarSelector calendarSelector = new DTCalendarSelector(settings);
-		final TargetSelector targetSelector = new DTTargetSelector(configuration, settings);
+//		final TargetSelector targetSelector = new DTTargetSelector(configuration, settings);
 		
 		Composite mainButtons = new Composite(settings, SWT.NONE);
 		mainButtons.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -186,7 +183,7 @@ public class MainWindow {
 		source.setLayout(layout);
 		source.setLayoutData(fill);
 		
-		AbstractFileChooser fc = new DragSourceFileChooser(source, configuration.getAppConfiguration());
+		AbstractFileChooser fc = new DragSourceFileChooser(source, configuration);
 		fc.getWidget().setLayoutData(fill);
 
 		txtSourceDir = new Text(source, SWT.BORDER);

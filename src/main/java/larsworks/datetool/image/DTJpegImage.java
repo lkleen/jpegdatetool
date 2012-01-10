@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 import org.apache.sanselan.ImageReadException;

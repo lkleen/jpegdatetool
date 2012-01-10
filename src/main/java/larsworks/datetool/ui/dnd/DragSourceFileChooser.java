@@ -2,9 +2,8 @@ package larsworks.datetool.ui.dnd;
 
 import java.io.File;
 
-import larsworks.datetool.configuration.AppConfiguration;
+import larsworks.datetool.configuration.Configuration;
 import larsworks.datetool.ui.AbstractFileChooser;
-import larsworks.datetool.util.SWTUtil;
 
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -16,10 +15,10 @@ import org.eclipse.swt.widgets.TreeItem;
 
 public class DragSourceFileChooser extends AbstractFileChooser {
 
-	public DragSourceFileChooser(Composite parent, AppConfiguration conf) {
+	public DragSourceFileChooser(Composite parent, Configuration conf) {
 		super(parent, conf);
 		if(conf != null) {
-			expandPath(tree.getItems(), conf.getBaseDir());
+			expandPath(tree.getItems(), conf.getAppConfiguration().getBaseDir());
 		}
 	}
 

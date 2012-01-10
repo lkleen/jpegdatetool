@@ -7,14 +7,14 @@ import larsworks.datetool.configuration.ThumbSize;
 
 public class XMLThumbConfiguration implements ThumbConfiguration {
 
-	@XmlElement(name = "IconSize")
-	private XMLThumbSize iconSize;
+	@XmlElement(name = "IconSize", required = true)
+	private XMLThumbSize iconSize = new XMLThumbSize(30, 30);
 
-	@XmlElement(name = "PreviewSize")
-	private XMLThumbSize previewSize;
-
-	@XmlElement(name = "SmallPreviewSize")
-	private XMLThumbSize smallPreviewSize;
+	@XmlElement(name = "PreviewSize", required = true)
+	private XMLThumbSize previewSize = new XMLThumbSize(1024, 1024);
+	
+	@XmlElement(name = "SmallPreviewSize", required = true)
+	private XMLThumbSize smallPreviewSize = new XMLThumbSize(80, 80);
 
 	public ThumbSize getIconSize() {
 		return iconSize;

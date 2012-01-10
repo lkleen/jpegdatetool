@@ -2,6 +2,7 @@ package larsworks.datetool.ui;
 
 import java.io.File;
 
+import larsworks.datetool.configuration.Configuration;
 import larsworks.datetool.ui.preview.DTImagePreview;
 
 import org.eclipse.swt.SWT;
@@ -21,10 +22,10 @@ public class ImagePreviewShell {
 	private final Shell shell;
 	private final ImagePreview image;
 	
-	public ImagePreviewShell(Display display, File file) {
+	public ImagePreviewShell(Display display, File file, Configuration conf) {
 		super();
 		shell = new Shell(display);
-		image = new DTImagePreview(file);
+		image = new DTImagePreview(file, conf);
 		shell.setLayout(new GridLayout(1, false));
 		final ScrolledComposite sCmp = new ScrolledComposite(shell, SWT.V_SCROLL | SWT.H_SCROLL);
 		GridData gd = new GridData(GridData.FILL_BOTH);
@@ -32,7 +33,6 @@ public class ImagePreviewShell {
 		final Composite cmp = new Composite(sCmp, SWT.NONE);
 		cmp.setLayout(new FillLayout());
 		final Label lbl = new Label(cmp, SWT.NONE);
-		image.setBounds(shell.getBounds());
 		lbl.setImage(image.getImage());
 		sCmp.setContent(lbl);
 		cmp.pack();

@@ -1,6 +1,7 @@
-/target
-/.project
+target
+.project
 /configuration.xml
-/.classpath
-/.settings
-/doc
+.classpath
+.settings
+doc
+
