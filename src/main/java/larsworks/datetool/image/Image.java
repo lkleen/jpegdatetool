@@ -21,13 +21,19 @@ public interface Image {
 	Calendar getOriginalDate();
 
 	/**
-	 * write the image with the possibly modified creation date 
+	 * write the image with the possibly modified creation date
+	 * 
 	 * @param file
 	 */
-	 void writeTo(File file);
-	
+	void writeTo(File file);
+
 	/**
-	 * @return the thumbnail for this image
+	 * @return swt image with original size
 	 */
-	 org.eclipse.swt.graphics.Image getThumb(ImageSize size);
+	org.eclipse.swt.graphics.Image getSWTImage();
+
+	/**
+	 * @return swt image resized to {@link ImageSize}
+	 */
+	org.eclipse.swt.graphics.Image getSWTImage(ImageSize size);
 }

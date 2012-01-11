@@ -1,9 +1,9 @@
 package larsworks.datetool.image;
 
-import java.awt.Dimension;
+import larsworks.datetool.configuration.ImageSize;
 
 import org.eclipse.swt.graphics.Image;
 
 public interface ImageResizer {
-	Image getResized(Dimension newSize);
+	Image getResized(ImageSize newSize);
 }

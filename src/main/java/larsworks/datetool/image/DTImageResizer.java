@@ -1,6 +1,6 @@
 package larsworks.datetool.image;
 
-import java.awt.Dimension;
+import larsworks.datetool.configuration.ImageSize;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -21,11 +21,11 @@ public class DTImageResizer implements ImageResizer {
 	}
 	
 	@Override
-	public Image getResized(Dimension newSize) {
+	public Image getResized(ImageSize newSize) {
 		Orientation orientation = getOrientation(original);
 		Rectangle bounds = original.getBounds();
-		int width  = newSize.width;
-		int height = newSize.height;
+		int width  = newSize.getWidth();
+		int height = newSize.getHeight();
 		
 		if(orientation == Orientation.vertical) {
 			float ratio = (float)width / bounds.width;

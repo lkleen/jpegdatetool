@@ -8,10 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import larsworks.datetool.configuration.ImageSize;
+import larsworks.datetool.configuration.xml.XMLImageSize;
+import larsworks.datetool.util.IOUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.sanselan.ImageReadException;
@@ -21,6 +25,7 @@ import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffField;
 import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 
 public class DTJpegImage implements JpegImage {
 
@@ -28,7 +33,10 @@ public class DTJpegImage implements JpegImage {
 	private final InputStream is;
 	private final File file;
 	private final Calendar originalDate;
+	private final Map<ImageSize, Image> images = new HashMap<ImageSize, Image>();
 	private Calendar creationDate;
+	private Image original;
+	private ImageSize originalSize;
 
 	private static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()); 
 	
@@ -219,9 +227,32 @@ public class DTJpegImage implements JpegImage {
 	}
 
 	@Override
-	public Image getThumb(ImageSize size) {
-		// TODO Auto-generated method stub
-		return null;
+	public Image getSWTImage(ImageSize size) {
+		if(!images.containsKey(size)) {
+			original = (original == null) ? getSWTImage() : original;
+			if(size.equals(getOriginalSize())) {
+				return original;
+			}
+			Image resized = new DTImageResizer(original).getResized(size);
+			images.put(size, resized);
+		}
+		return images.get(size);
 	}
 
+	@Override
+	public Image getSWTImage() {
+		if(original == null) {
+			original = IOUtil.loadImage(file);
+			images.put(getOriginalSize(), original);
+		}
+		return original;
+	}
+
+	private ImageSize getOriginalSize() {
+		if(originalSize == null) {
+			Rectangle bounds = original.getBounds();
+			originalSize = new XMLImageSize(bounds.width, bounds.height);
+		}
+		return originalSize; 
+	}
 }
