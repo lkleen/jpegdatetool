@@ -11,6 +11,8 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import larsworks.datetool.configuration.ImageSize;
+
 import org.apache.log4j.Logger;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.Sanselan;
@@ -18,6 +20,7 @@ import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffField;
 import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
+import org.eclipse.swt.graphics.Image;
 
 public class DTJpegImage implements JpegImage {
 
@@ -216,7 +219,7 @@ public class DTJpegImage implements JpegImage {
 	}
 
 	@Override
-	public Thumb getThumb() {
+	public Image getThumb(ImageSize size) {
 		// TODO Auto-generated method stub
 		return null;
 	}

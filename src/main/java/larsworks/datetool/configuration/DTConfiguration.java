@@ -51,7 +51,7 @@ public class DTConfiguration implements Configuration {
 	}
 
 	@Override
-	public ThumbConfiguration getThumbnailConfiguration() {
+	public ImageConfiguration getThumbnailConfiguration() {
 		return conf.getThumbConfiguration();
 	}
 

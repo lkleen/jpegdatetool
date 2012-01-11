@@ -3,6 +3,8 @@ package larsworks.datetool.image;
 import java.io.File;
 import java.util.Calendar;
 
+import larsworks.datetool.configuration.ImageSize;
+
 public interface Image {
 	File getFile();
 
@@ -27,5 +29,5 @@ public interface Image {
 	/**
 	 * @return the thumbnail for this image
 	 */
-	Thumb getThumb();
+	 org.eclipse.swt.graphics.Image getThumb(ImageSize size);
 }

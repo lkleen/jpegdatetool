@@ -20,7 +20,7 @@ public class XMLConfiguration {
 	private XMLReaderConfiguration readerConfiguration = new XMLReaderConfiguration();
 
 	@XmlElement(name = "ThumbConfiguration", required = true)
-	private XMLThumbConfiguration thumbConfiguration = new XMLThumbConfiguration();
+	private XMLImageConfiguration thumbConfiguration = new XMLImageConfiguration();
 	
 	public static class XMLAppConfiguration implements AppConfiguration {
 
@@ -85,11 +85,11 @@ public class XMLConfiguration {
 		return readerConfiguration;
 	}
 
-	public XMLThumbConfiguration getThumbConfiguration() {
+	public XMLImageConfiguration getThumbConfiguration() {
 		return thumbConfiguration;
 	}
 
-	public void setThumbConfiguration(XMLThumbConfiguration thumbConfiguration) {
+	public void setThumbConfiguration(XMLImageConfiguration thumbConfiguration) {
 		this.thumbConfiguration = thumbConfiguration;
 	}
 

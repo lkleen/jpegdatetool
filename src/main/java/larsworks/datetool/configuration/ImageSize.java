@@ -1,6 +1,6 @@
 package larsworks.datetool.configuration;
 
-public interface ThumbSize {
+public interface ImageSize {
 	int getWidth();
 	int getHeight();
 }

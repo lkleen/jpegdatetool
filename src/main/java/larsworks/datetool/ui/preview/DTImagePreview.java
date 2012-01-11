@@ -1,5 +1,6 @@
 package larsworks.datetool.ui.preview;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,32 +11,22 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 
 import larsworks.datetool.configuration.Configuration;
-import larsworks.datetool.configuration.ThumbSize;
+import larsworks.datetool.configuration.ImageSize;
+import larsworks.datetool.image.DTImageResizer;
 import larsworks.datetool.ui.ImagePreview;
 
 public class DTImagePreview implements ImagePreview {
 
 	private static Logger logger = Logger.getLogger(DTImagePreview.class);
 	
-	private static enum Orientation {
-		horizontal,
-		vertical
-	}
-	
 	private final Image original;
-	private final float aspectRatio;
-	private final Rectangle bounds; 
-	private final Orientation orientation;
-	private final ThumbSize size;
+	private final ImageSize size;
 	private Image resized;
 	
 	
 	public DTImagePreview(File file, Configuration conf) {
 		size = conf.getThumbnailConfiguration().getPreviewSize();
 		original = loadImage(file);
-		aspectRatio = original.getBounds().width / original.getBounds().height;
-		orientation = (aspectRatio > 1) ? Orientation.horizontal : Orientation.vertical;
-		bounds = original.getBounds();
 		resized = resize(size.getWidth(), size.getHeight());
 	}
 	
@@ -58,7 +49,6 @@ public class DTImagePreview implements ImagePreview {
 	@Override
 	public void setZoom(int percent) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -82,16 +72,7 @@ public class DTImagePreview implements ImagePreview {
 	}
 	
 	private Image resize(int width, int height) {
-		if(orientation == Orientation.vertical) {
-			float ratio = (float)width / bounds.width;
-			height = Math.round(bounds.height * ratio);
-		} else {
-			float ratio = (float)height / bounds.height;
-			width = Math.round(bounds.width * ratio);
-		}
-		ImageData id = original.getImageData().scaledTo(width, height);
-		
-		return new Image(null, id);
+		return new DTImageResizer(original).getResized(new Dimension(width, height));
 	}
 	
 }

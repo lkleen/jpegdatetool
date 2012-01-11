@@ -2,9 +2,9 @@ package larsworks.datetool.configuration.xml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-import larsworks.datetool.configuration.ThumbSize;
+import larsworks.datetool.configuration.ImageSize;
 
-public class XMLThumbSize implements ThumbSize {
+public class XMLImageSize implements ImageSize {
 
 	@XmlAttribute(name = "height", required = true)
 	private int height;
@@ -12,9 +12,9 @@ public class XMLThumbSize implements ThumbSize {
 	@XmlAttribute(name = "width", required = true)
 	private int width;
 
-	public XMLThumbSize() {}
+	public XMLImageSize() {}
 	
-	public XMLThumbSize(int width, int height) {
+	public XMLImageSize(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
@@ -36,8 +36,8 @@ public class XMLThumbSize implements ThumbSize {
 	
 	@Override
 	public boolean equals(Object other) {
-		if(other instanceof ThumbSize) {
-			ThumbSize ts = (ThumbSize) other;
+		if(other instanceof ImageSize) {
+			ImageSize ts = (ImageSize) other;
 			return (ts.getWidth() == this.getWidth()) && (ts.getHeight() == this.getHeight());
 		}
 		return false;
