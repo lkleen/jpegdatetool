@@ -194,12 +194,15 @@ public class DTJpegImage implements JpegImage {
 	}
 
 	public int compareTo(JpegImage o) {
-		if (creationDate.before(o.getCreationDate())) {
+		if(creationDate.before(o.getCreationDate())) {
 			return -1;
 		} else if (creationDate.after(o.getCreationDate())) {
 			return 1;
 		}
-		if (file.getAbsolutePath().equals(o.getFile().getAbsolutePath())) {
+		if(file == null || o.getFile() == null) {
+			return -1;
+		}
+		if(file.getAbsolutePath().equals(o.getFile().getAbsolutePath())) {
 			return 0;
 		} else {
 			return 1;
