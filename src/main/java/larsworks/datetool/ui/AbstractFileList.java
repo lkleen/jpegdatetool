@@ -13,9 +13,11 @@ public abstract class AbstractFileList implements DTWidget<Table> {
 
 	protected final Table table;
 	protected final FileListData fileListData;
+	protected final Configuration conf;
 	
 	public AbstractFileList(Composite parent, Configuration conf) {
 		super();
+		this.conf = conf;
 		table = new Table(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);

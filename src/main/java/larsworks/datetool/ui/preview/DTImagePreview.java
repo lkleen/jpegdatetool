@@ -14,14 +14,14 @@ import larsworks.datetool.util.IOUtil;
 
 public class DTImagePreview implements ImagePreview {
 
-	private final Image original;
+	private final File file;
 	private final ImageSize size;
 	private Image resized;
 	
 	
 	public DTImagePreview(File file, Configuration conf) {
+        this.file = file;
 		size = conf.getThumbnailConfiguration().getPreviewSize();
-		original = IOUtil.loadImage(file);
 		resized = resize(size.getWidth(), size.getHeight());
 	}
 	
@@ -56,7 +56,7 @@ public class DTImagePreview implements ImagePreview {
 	}
 	
 	private Image resize(int width, int height) {
-		return new DTImageResizer(original).getResized(new XMLImageSize(width, height));
+		return new DTImageResizer(file).getResized(new XMLImageSize(width, height));
 	}
 	
 }

@@ -86,7 +86,7 @@ public class SWTUtil {
 	}
 	
 	/**
-	 * adds childs for items which contains folders asynchronous. 
+	 * adds children for items which contains folders asynchronous. 
 	 * @param item
 	 */
 	public synchronized static void addChildsAsync(TreeItem item) {
@@ -103,7 +103,7 @@ public class SWTUtil {
 	/**
 	 * returns the system icon for the given file. icons will not
 	 * be loaded twice, if the icon of a certain type has been 
-	 * loaded before the cached image will bereturned  
+	 * loaded before the cached image will be returned  
 	 * @param file file or directory
 	 * @return the system icon image for the given file or folder
 	 */

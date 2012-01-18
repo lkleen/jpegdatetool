@@ -25,6 +25,6 @@ public class DTFileList extends AbstractFileList {
 
 	@Override
 	protected FileListData createFileListData() {
-		return new DTFileListData(getWidget());
+		return new DTFileListData(getWidget(), conf);
 	}
 }
