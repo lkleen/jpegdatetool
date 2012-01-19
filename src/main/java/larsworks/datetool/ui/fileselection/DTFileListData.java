@@ -18,12 +18,12 @@ import larsworks.datetool.image.DTJpegImageSet;
 import larsworks.datetool.image.ImageSet;
 import larsworks.datetool.image.JpegImage;
 
+import larsworks.datetool.ui.ImagePreviewShell;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.*;
 
 public class DTFileListData implements FileListData {
 
@@ -38,33 +38,9 @@ public class DTFileListData implements FileListData {
 	private Calendar startDate;
 
 	static {
-		int numProcessors = Runtime.getRuntime().availableProcessors() / 2;
+		int numProcessors = Runtime.getRuntime().availableProcessors();
 		numProcessors = (numProcessors == 0) ? 1 : numProcessors;
         executor = Executors.newFixedThreadPool(numProcessors);
-	}
-
-	private static class AddResizedTask implements Runnable {
-
-		private final TableItem ti;
-		private final JpegImage image;
-		private final ImageSize size;
-
-		public AddResizedTask(TableItem ti, JpegImage image, ImageSize size) {
-			super();
-			this.ti = ti;
-			this.image = image;
-			this.size = size;
-		}
-
-		@Override
-		public void run() {
-			try {
-				ti.setImage(0, image.getSWTImage(size));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
 
 	public DTFileListData(Table table, Configuration conf) {
@@ -117,7 +93,7 @@ public class DTFileListData implements FileListData {
 		}
 	}
 
-	private void addImage(JpegImage image) {
+	private void addImage(final JpegImage image) {
 		String[] str;
 		final TableItem ti = new TableItem(table, SWT.NONE);
 		ti.setData(image);
@@ -130,21 +106,45 @@ public class DTFileListData implements FileListData {
         Callable<Image> task = new DTImageResizerTask(image, conf.getThumbnailConfiguration().getIconSize());
 		final Future<Image> future = executor.submit(task);
 
+        ti.addListener(SWT.MouseDoubleClick, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                logger.info("click");
+
+                new ImagePreviewShell(table.getDisplay(), image.getFile(), conf);
+            }
+        });
+        addTableItemDisposeListener(ti, future);
+        setTableItemImageAsync(ti, future);
+    }
+
+    private void addTableItemDisposeListener(TableItem ti, final Future<Image> future) {
+        ti.addDisposeListener(new DisposeListener() {
+            @Override
+            public void widgetDisposed(DisposeEvent disposeEvent) {
+                future.cancel(true);
+            }
+        });
+    }
+
+    private void setTableItemImageAsync(final TableItem ti, final Future<Image> future) {
         Display.getCurrent().asyncExec(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ti.setImage(0, future.get());
+                    Image img = future.get();
+                    ti.setImage(0, img);
+                    table.getColumn(0).setWidth(img.getBounds().width);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e);
                 } catch (ExecutionException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e);
                 }
             }
         });
-	}
+    }
 
-	private static String getDateString(Calendar c) {
+    private static String getDateString(Calendar c) {
 		DateFormatter df = new SimpleDateFormatter(c);
 		return df.getDateString();
 	}
