@@ -1,7 +1,9 @@
 target
+.idea
 .project
 /configuration.xml
 .classpath
 .settings
 doc
+jpegdatetool.iml
 
