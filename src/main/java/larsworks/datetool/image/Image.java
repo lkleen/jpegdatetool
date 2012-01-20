@@ -2,6 +2,7 @@ package larsworks.datetool.image;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.concurrent.Future;
 
 import larsworks.datetool.configuration.ImageSize;
 
@@ -30,10 +31,10 @@ public interface Image {
 	/**
 	 * @return swt image with original size
 	 */
-	org.eclipse.swt.graphics.Image getSWTImage();
+	Future<org.eclipse.swt.graphics.Image> getSWTImage();
 
 	/**
 	 * @return swt image resized to {@link ImageSize}
 	 */
-	org.eclipse.swt.graphics.Image getSWTImage(ImageSize size);
+	Future<org.eclipse.swt.graphics.Image> getSWTImage(ImageSize size);
 }

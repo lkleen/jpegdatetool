@@ -1,47 +1,31 @@
 package larsworks.datetool.ui.fileselection;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.*;
-
 import larsworks.datetool.configuration.Configuration;
-import larsworks.datetool.configuration.ImageSize;
 import larsworks.datetool.date.DateFormatter;
 import larsworks.datetool.date.SimpleDateFormatter;
-import larsworks.datetool.image.DTImageResizerTask;
-import larsworks.datetool.image.DTJpegImage;
-import larsworks.datetool.image.DTJpegImageSet;
-import larsworks.datetool.image.ImageSet;
-import larsworks.datetool.image.JpegImage;
-
-import larsworks.datetool.ui.ImagePreviewShell;
+import larsworks.datetool.image.*;
+import larsworks.datetool.tasks.ImageResizerTask;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
+
+import java.io.File;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class DTFileListData implements FileListData {
 
 	private static final Logger logger = Logger.getLogger(DTFileListData.class);
-
-	private static final ExecutorService executor;
 
 	private final Table table;
 	private final Set<JpegImage> images;
 	private final Configuration conf;
 	private ImageSet<JpegImage> imageSet;
 	private Calendar startDate;
-
-	static {
-		int numProcessors = Runtime.getRuntime().availableProcessors();
-		numProcessors = (numProcessors == 0) ? 1 : numProcessors;
-        executor = Executors.newFixedThreadPool(numProcessors);
-	}
 
 	public DTFileListData(Table table, Configuration conf) {
 		this.table = table;
@@ -67,6 +51,17 @@ public class DTFileListData implements FileListData {
 
 	@Override
 	public void removeFiles(File... files) {
+        List<File> fileList = Arrays.asList(files);
+        for(int i = 0; i < table.getItemCount(); i++) {
+            TableItem ti = table.getItem(i);
+            larsworks.datetool.image.Image image = (larsworks.datetool.image.Image) ti.getData();
+            if(fileList.contains(image.getFile())) {
+                table.remove(i);
+                images.remove(image);
+            }
+        }
+        System.gc();
+        /*
 		Set<JpegImage> trash = new HashSet<JpegImage>();
 		for (JpegImage img : images) {
 			for (File file : files) {
@@ -80,6 +75,7 @@ public class DTFileListData implements FileListData {
 			setStartDate(null);
 		}
 		updateTable();
+		*/
 	}
 
 	private void updateTable() {
@@ -103,28 +99,9 @@ public class DTFileListData implements FileListData {
 		str[2] = image.getFile().getAbsolutePath();
 		ti.setText(str);
 
-        Callable<Image> task = new DTImageResizerTask(image, conf.getThumbnailConfiguration().getIconSize());
-		final Future<Image> future = executor.submit(task);
+		final Future<Image> future = image.getSWTImage(conf.getThumbnailConfiguration().getIconSize());
 
-        ti.addListener(SWT.MouseDoubleClick, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                logger.info("click");
-
-                new ImagePreviewShell(table.getDisplay(), image.getFile(), conf);
-            }
-        });
-        addTableItemDisposeListener(ti, future);
         setTableItemImageAsync(ti, future);
-    }
-
-    private void addTableItemDisposeListener(TableItem ti, final Future<Image> future) {
-        ti.addDisposeListener(new DisposeListener() {
-            @Override
-            public void widgetDisposed(DisposeEvent disposeEvent) {
-                future.cancel(true);
-            }
-        });
     }
 
     private void setTableItemImageAsync(final TableItem ti, final Future<Image> future) {
@@ -132,9 +109,11 @@ public class DTFileListData implements FileListData {
             @Override
             public void run() {
                 try {
-                    Image img = future.get();
-                    ti.setImage(0, img);
-                    table.getColumn(0).setWidth(img.getBounds().width);
+                    if(!ti.isDisposed()) {
+                        Image img = future.get();
+                        ti.setImage(0, img);
+                        table.getColumn(0).setWidth(img.getBounds().width);
+                    }
                 } catch (InterruptedException e) {
                     logger.error(e);
                 } catch (ExecutionException e) {

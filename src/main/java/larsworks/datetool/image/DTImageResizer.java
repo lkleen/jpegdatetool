@@ -8,6 +8,9 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import java.io.File;
 
+/**
+ * TODO: fix resizing of images with vertical orientation
+ */
 public class DTImageResizer implements ImageResizer {
 
     private static enum Orientation {

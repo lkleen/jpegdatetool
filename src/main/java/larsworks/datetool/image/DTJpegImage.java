@@ -1,6 +1,9 @@
 package larsworks.datetool.image;
 
 import larsworks.datetool.configuration.ImageSize;
+import larsworks.datetool.tasks.CopyTask;
+import larsworks.datetool.tasks.ImageResizerTask;
+import larsworks.datetool.tasks.LoadImageTask;
 import larsworks.datetool.util.IOUtil;
 import org.apache.log4j.Logger;
 import org.apache.sanselan.ImageReadException;
@@ -12,11 +15,14 @@ import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.eclipse.swt.graphics.Image;
 
 import java.io.*;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+/**
+ * TODO: add a scheduled executor which removes finished future tasks from the futures list
+ */
 public class DTJpegImage implements JpegImage {
 
     private static final Logger logger = Logger.getLogger(DTJpegImage.class);
@@ -27,53 +33,7 @@ public class DTJpegImage implements JpegImage {
     private static ExecutorService executor = Executors
             .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    private static class CopyTask implements Runnable {
-
-        private final File source;
-        private final File target;
-
-        public CopyTask(File source, File target) {
-            super();
-            this.source = source;
-            this.target = target;
-
-            if (!source.exists()) {
-                throw new IllegalArgumentException("source file not found");
-            }
-
-            if (target.exists()) {
-                throw new IllegalArgumentException("target file already exists");
-            }
-
-        }
-
-        @Override
-        public void run() {
-            try {
-                logger.info(target.getAbsolutePath());
-                if (!target.createNewFile()) {
-                    throw new IllegalStateException("cannot create existing file " + target.getAbsolutePath());
-                }
-
-                FileInputStream fin = new FileInputStream(source);
-                FileOutputStream fout = new FileOutputStream(target);
-
-                byte[] buffer = new byte[1024];
-                int length;
-
-                while ((length = fin.read(buffer)) > 0) {
-                    fout.write(buffer, 0, length);
-                }
-
-                fin.close();
-                fout.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
+    private final List<Future<?>> futures = new ArrayList<Future<?>>();
 
     public DTJpegImage(Calendar creationDate) {
         if (creationDate == null) {
@@ -222,13 +182,29 @@ public class DTJpegImage implements JpegImage {
     }
 
     @Override
-    public Image getSWTImage(ImageSize size) {
-        return new DTImageResizer(file).getResized(size);
+    public Future<Image> getSWTImage(ImageSize size) {
+        ImageResizerTask task = new ImageResizerTask(file, size);
+        Future<Image> future = executor.submit(task);
+        futures.add(future);
+        return future;
     }
 
     @Override
-    public Image getSWTImage() {
-        return IOUtil.loadImage(file);
+    public Future<Image> getSWTImage() {
+        LoadImageTask  task = new LoadImageTask(file);
+        Future<Image> future = executor.submit(task);
+        futures.add(future);
+        return future;
+    }
+
+    @Override
+    public void finalize() {
+        logger.info("finalizing " + this);
+        for(Future<?> future : futures) {
+            if(!future.isDone() && !future.isCancelled()) {
+                future.cancel(true);
+            }
+        }
     }
 
 }

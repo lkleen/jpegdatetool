@@ -1,26 +1,28 @@
-package larsworks.datetool.image;
+package larsworks.datetool.tasks;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.RunnableFuture;
 
 import larsworks.datetool.configuration.ImageSize;
 
+import larsworks.datetool.image.DTImageResizer;
 import org.eclipse.swt.graphics.Image;
 
-public class DTImageResizerTask implements Callable<Image> {
+public class ImageResizerTask implements Callable<Image> {
 
-	private final larsworks.datetool.image.Image image;
+	private final File file;
 	private final ImageSize size;
 	
-	public DTImageResizerTask(larsworks.datetool.image.Image image, ImageSize size) {
-		this.image = image;
+	public ImageResizerTask(File file, ImageSize size) {
+		this.file = file;
 		this.size = size;
 	}
 
 	@Override
 	public Image call() throws Exception {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-		return image.getSWTImage(size);
+		return new DTImageResizer(file).getResized(size);
 	}
 
 }
