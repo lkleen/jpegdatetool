@@ -15,30 +15,24 @@
     </repositories>
 
 	<dependencies>
-		<dependency>
+ 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.sanselan</groupId>
 			<artifactId>sanselan</artifactId>
 			<version>0.97-incubator</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
         <dependency>
             <groupId>org.eclipse.swt</groupId>
-            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+            <artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
             <version>3.7.2</version>
         </dependency>
 	</dependencies>

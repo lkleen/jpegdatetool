@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import larsworks.datetool.ui.fileselection.DTTargetSelector;
+import larsworks.datetool.ui.fileselection.TargetSelector;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -121,7 +123,7 @@ public class MainWindow {
 		settings.setLayoutData(fill);
 
 		final CalendarSelector calendarSelector = new DTCalendarSelector(settings);
-//		final TargetSelector targetSelector = new DTTargetSelector(configuration, settings);
+		final TargetSelector targetSelector = new DTTargetSelector(configuration, settings);
 		
 		Composite mainButtons = new Composite(settings, SWT.NONE);
 		mainButtons.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -145,33 +147,36 @@ public class MainWindow {
 		btnCopy.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				ImageSet<?> images = fileList.getFileListData().getImageSet();
-				for(Image image :images.getImages()) {
-					DateFormatter df = new SimpleDateFormatter(image.getCreationDate());
-					StringBuilder filename = new StringBuilder();
-					filename
-						.append(df.getDateString())
-						.append(configuration.getAppConfiguration().getOutputSuffix())
-						.append(".")
-						.append(images.getFileExtension());
-					StringBuilder outDir = new StringBuilder(configuration.getAppConfiguration().getOutputDir());
-					if(outDir.equals("")) {
-						throw new IllegalArgumentException("no output dir set");
-					}
-					outDir
-						.append(File.separatorChar)
-						.append(filename);
-					File target = new File(outDir.toString());
-					image.writeTo(target);
-				}
-				
+                copyImagesToTarget();
 			}
 		});
-		
 		tab1.setControl(settings);
 	}
 
-	private void createFileView(Configuration configuration) {
+    private void copyImagesToTarget() {
+        ImageSet<?> images = fileList.getFileListData().getImageSet();
+        for(Image image :images.getImages()) {
+            DateFormatter df = new SimpleDateFormatter(image.getCreationDate());
+            StringBuilder filename = new StringBuilder();
+            filename
+                .append(df.getDateString())
+                .append(configuration.getAppConfiguration().getOutputSuffix())
+                .append(".")
+                .append(images.getFileExtension());
+            StringBuilder outDir = new StringBuilder(configuration.getAppConfiguration().getOutputDir());
+            if(outDir.equals("")) {
+                throw new IllegalArgumentException("no output dir set");
+            }
+            outDir
+                .append(File.separatorChar)
+                .append(filename);
+            File target = new File(outDir.toString());
+            image.writeTo(target);
+        }
+    }
+
+
+    private void createFileView(Configuration configuration) {
 		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;

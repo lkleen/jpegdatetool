@@ -5,6 +5,7 @@ import java.io.File;
 import larsworks.datetool.configuration.Configuration;
 import larsworks.datetool.ui.preview.DTImagePreview;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
@@ -18,6 +19,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImagePreviewShell {
+
+    static final Logger log = Logger.getLogger(ImagePreviewShell.class);
 
 	private final Shell shell;
 	private final ImagePreview image;
@@ -42,8 +45,7 @@ public class ImagePreviewShell {
 			
 			@Override
 			public void mouseScrolled(MouseEvent event) {
-				System.out.println(event.count);
-				
+				log.debug(event.count);
 			}
 		});
 

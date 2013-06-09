@@ -5,12 +5,15 @@ import java.io.File;
 import larsworks.datetool.ui.fileselection.FileListData;
 import larsworks.datetool.util.IOUtil;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 public class DropTargetFileList extends DropTargetAdapter {
+
+    static final Logger log = Logger.getLogger(DropTargetFileList.class);
 
 	protected final Table table;
 	protected final FileListData fileListData;
@@ -31,7 +34,7 @@ public class DropTargetFileList extends DropTargetAdapter {
 
 	private void addFiles(String path) {
 		File file = new File(path);
-    	System.out.println(path);
+    	log.debug(path);
     	File[] files = IOUtil.getJpegFiles(file);
     	if(files.length > 0) {
     		fileListData.addFiles(IOUtil.getJpegFiles(file));
