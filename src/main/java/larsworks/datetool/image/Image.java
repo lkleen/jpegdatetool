@@ -37,4 +37,9 @@ public interface Image {
 	 * @return swt image resized to {@link ImageSize}
 	 */
 	Future<org.eclipse.swt.graphics.Image> getSWTImage(ImageSize size);
+
+    /**
+     *
+     * @return
+     */
 }

@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import larsworks.datetool.image.*;
 import larsworks.datetool.ui.fileselection.DTTargetSelector;
 import larsworks.datetool.ui.fileselection.TargetSelector;
+import larsworks.datetool.util.DataTimeImageFilenameBuilder;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -30,9 +32,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import larsworks.datetool.configuration.Configuration;
 import larsworks.datetool.date.DateFormatter;
 import larsworks.datetool.date.SimpleDateFormatter;
-import larsworks.datetool.image.Image;
-import larsworks.datetool.image.ImageSet;
-import larsworks.datetool.image.JpegImage;
 import larsworks.datetool.ui.dnd.DragSourceFileChooser;
 import larsworks.datetool.ui.fileselection.DTFileList;
 import larsworks.datetool.ui.fileselection.FileListData;
@@ -155,21 +154,20 @@ public class MainWindow {
 
     private void copyImagesToTarget() {
         ImageSet<?> images = fileList.getFileListData().getImageSet();
+        int index = 0;
         for(Image image :images.getImages()) {
             DateFormatter df = new SimpleDateFormatter(image.getCreationDate());
-            StringBuilder filename = new StringBuilder();
-            filename
-                .append(df.getDateString())
-                .append(configuration.getAppConfiguration().getOutputSuffix())
-                .append(".")
-                .append(images.getFileExtension());
+            DataTimeImageFilenameBuilder filenameBuilder = new DataTimeImageFilenameBuilder(df);
+            filenameBuilder.addSuffix(new StringSuffix(configuration.getAppConfiguration().getOutputSuffix()));
+            filenameBuilder.addSuffix(new IndexSuffix(images.size(), index++));
+            filenameBuilder.addSuffix(new FileExtensionSuffix(images.getFileExtension()));
             StringBuilder outDir = new StringBuilder(configuration.getAppConfiguration().getOutputDir());
             if(outDir.equals("")) {
                 throw new IllegalArgumentException("no output dir set");
             }
             outDir
                 .append(File.separatorChar)
-                .append(filename);
+                .append(filenameBuilder.build());
             File target = new File(outDir.toString());
             image.writeTo(target);
         }
