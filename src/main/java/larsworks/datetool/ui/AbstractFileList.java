@@ -4,6 +4,7 @@ package larsworks.datetool.ui;
 import larsworks.datetool.configuration.Configuration;
 import larsworks.datetool.ui.fileselection.FileListData;
 
+import larsworks.datetool.ui.widgets.ImageTableHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;

@@ -4,7 +4,6 @@ import larsworks.datetool.configuration.ImageSize;
 import larsworks.datetool.tasks.CopyTask;
 import larsworks.datetool.tasks.ImageResizerTask;
 import larsworks.datetool.tasks.LoadImageTask;
-import larsworks.datetool.util.IOUtil;
 import org.apache.log4j.Logger;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.Sanselan;
@@ -15,7 +14,10 @@ import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.eclipse.swt.graphics.Image;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -191,7 +193,7 @@ public class DTJpegImage implements JpegImage {
 
     @Override
     public Future<Image> getSWTImage() {
-        LoadImageTask  task = new LoadImageTask(file);
+        LoadImageTask task = new LoadImageTask(file);
         Future<Image> future = executor.submit(task);
         futures.add(future);
         return future;
@@ -200,11 +202,27 @@ public class DTJpegImage implements JpegImage {
     @Override
     public void finalize() {
         logger.info("finalizing " + this);
-        for(Future<?> future : futures) {
-            if(!future.isDone() && !future.isCancelled()) {
+        for (Future<?> future : futures) {
+            if (!future.isDone() && !future.isCancelled()) {
                 future.cancel(true);
             }
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DTJpegImage)) return false;
+
+        DTJpegImage that = (DTJpegImage) o;
+
+        if (file != null ? !file.equals(that.file) : that.file != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return file != null ? file.hashCode() : 0;
+    }
 }
