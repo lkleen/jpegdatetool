@@ -23,7 +23,6 @@ public abstract class AbstractFileList implements DTWidget<Table> {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		fileListData = createFileListData();
-		addColumns();
 	}
 
 	@Override
@@ -36,17 +35,5 @@ public abstract class AbstractFileList implements DTWidget<Table> {
 	} 
 	
 	protected abstract FileListData createFileListData();
-	
-	private void addColumns() {
-		final TableColumn col1 = new TableColumn(table, SWT.LEFT);
-		final TableColumn col2 = new TableColumn(table, SWT.BORDER);
-		final TableColumn col3 = new TableColumn(table, SWT.LEFT);
-		col1.setText("left");
-		col2.setText("center");
-		col3.setText("right");
-		col3.setAlignment(SWT.RIGHT);
-		col1.pack();
-		col2.pack();
-		col3.pack();
-	}
+
 }
