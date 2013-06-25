@@ -70,12 +70,9 @@ public class ImageTableHandler {
     }
 
     public void removeImage(Image image) {
-        for (int i = 0; i < table.getItemCount(); i++) {
-            TableItem ti = table.getItem(i);
-            Image tableItemData = (Image) ti.getData();
-            if (image.equals(tableItemData)) {
-                table.remove(i);
-            }
+        int index =  getIndexFrom(image);
+        if(index != UNDEFINED) {
+            table.remove(index);
         }
     }
 
