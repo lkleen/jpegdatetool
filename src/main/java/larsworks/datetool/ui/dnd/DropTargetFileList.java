@@ -15,12 +15,10 @@ public class DropTargetFileList extends DropTargetAdapter {
 
     static final Logger log = Logger.getLogger(DropTargetFileList.class);
 
-	protected final Table table;
 	protected final FileListData fileListData;
 	
-	public DropTargetFileList(Table table, FileListData fileListData) {
+	public DropTargetFileList(FileListData fileListData) {
 		super();
-		this.table = table;
 		this.fileListData = fileListData;
 	}
 
@@ -33,15 +31,11 @@ public class DropTargetFileList extends DropTargetAdapter {
     }
 
 	private void addFiles(String path) {
-		File file = new File(path);
-    	log.debug(path);
-    	File[] files = IOUtil.getJpegFiles(file);
-    	if(files.length > 0) {
-    		fileListData.addFiles(IOUtil.getJpegFiles(file));
-    		for(TableColumn col : table.getColumns()) {
-    			col.pack();
-    		}
-    	}
+    	File[] files = IOUtil.getJpegFiles(new File(path));
+        log.debug(path);
+        for(File file : files) {
+            fileListData.addFile(file);
+        }
 	}
 
 }

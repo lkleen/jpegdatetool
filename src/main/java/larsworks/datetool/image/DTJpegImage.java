@@ -30,8 +30,8 @@ public class DTJpegImage implements JpegImage {
     private final Calendar originalDate;
     private Calendar creationDate;
 
-    private static ExecutorService executor = Executors
-            .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
 
     private final List<Future<?>> futures = new ArrayList<Future<?>>();
 

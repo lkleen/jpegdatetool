@@ -23,10 +23,8 @@ public class ImageResizerTask implements Callable<Image> {
 
 	@Override
 	public Image call() throws Exception {
-        log.debug("submitted " + this.hashCode());
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
         Image img = new DTImageResizer(file).getResized(size);
-        log.debug("calculated " + this.hashCode());
 		return img;
 	}
 

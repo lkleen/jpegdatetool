@@ -30,7 +30,7 @@ public class DTFileList extends AbstractFileList {
 	private void addDropTarget() {
 		DropTarget dt = new DropTarget(table, DND.DROP_MOVE);
 		dt.setTransfer(new Transfer[] { StringArrayTransfer.getInstance() });
-		dt.addDropListener(new DropTargetFileList(table, fileListData));
+		dt.addDropListener(new DropTargetFileList(fileListData));
 	}
 
 	@Override
