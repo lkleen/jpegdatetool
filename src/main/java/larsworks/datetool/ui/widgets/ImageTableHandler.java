@@ -26,6 +26,7 @@ public class ImageTableHandler {
     private static final int COL_INDEX_THUMB     = 0;
     private static final int COL_INDEX_TIMESTAMP = 1;
     private static final int COL_INDEX_FILENAME  = 2;
+    private static final int UNDEFINED = -1;
 
     private static final Logger logger = Logger.getLogger(ImageTableHandler.class);
     private final Configuration conf;
@@ -50,16 +51,18 @@ public class ImageTableHandler {
     }
 
     public void addImage(Image image) {
-        String[] str;
-        final TableItem ti = new TableItem(table, SWT.NONE);
-        ti.setData(image);
-        str = new String[3];
-        str[COL_INDEX_THUMB] = "";
-        str[COL_INDEX_TIMESTAMP] = getDateString(image.getCreationDate());
-        str[COL_INDEX_FILENAME]  = image.getFile().getAbsolutePath();
-        ti.setText(str);
-        final Future<org.eclipse.swt.graphics.Image> future = image.getSWTImage(conf.getThumbnailConfiguration().getIconSize());
-        setTableItemImageAsync(ti, future);
+        if(getIndexFrom(image) == UNDEFINED) {
+            String[] str;
+            final TableItem ti = new TableItem(table, SWT.NONE);
+            ti.setData(image);
+            str = new String[3];
+            str[COL_INDEX_THUMB] = "";
+            str[COL_INDEX_TIMESTAMP] = getDateString(image.getCreationDate());
+            str[COL_INDEX_FILENAME]  = image.getFile().getAbsolutePath();
+            ti.setText(str);
+            final Future<org.eclipse.swt.graphics.Image> future = image.getSWTImage(conf.getThumbnailConfiguration().getIconSize());
+            setTableItemImageAsync(ti, future);
+        }
     }
 
     public void clearAll() {
@@ -74,6 +77,17 @@ public class ImageTableHandler {
                 table.remove(i);
             }
         }
+    }
+
+    private int getIndexFrom(Image image) {
+        for (int i = 0; i < table.getItemCount(); i++) {
+            TableItem ti = table.getItem(i);
+            Image tableItemData = (Image) ti.getData();
+            if (image.equals(tableItemData)) {
+                return i;
+            }
+        }
+        return UNDEFINED;
     }
 
     private void setTableItemImageAsync(final TableItem ti, final Future<org.eclipse.swt.graphics.Image> future) {
