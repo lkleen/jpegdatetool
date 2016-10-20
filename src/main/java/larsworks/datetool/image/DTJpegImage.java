@@ -90,7 +90,7 @@ public class DTJpegImage implements JpegImage {
                 JpegImageMetadata jim = (JpegImageMetadata) metadata;
                 TiffField field = jim
                         .findEXIFValue(ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
-                String time = (String) field.getValue();
+                String time = (field == null) ? "" : (String) field.getValue();
                 long millis = parseDate(time);
                 Calendar date = new GregorianCalendar();
                 date.setTimeInMillis(millis);
